@@ -16,11 +16,13 @@ RUN git clone https://github.com/bulletphysics/bullet3.git && mkdir bullet3/buil
     ninja -j4 && ninja install && \
     cd ../.. && rm -rf bullet3
 
-RUN git clone https://github.com/rdiankov/collada-dom.git && mkdir collada-dom/build && \
-    cd collada-dom/build && \
-    cmake .. -GNinja && \
-    ninja -j4 && ninja install && \
-    cd ../.. && rm -rf collada-dom
+
+# Use openrave/3rdparty collada-dom
+# RUN git clone https://github.com/rdiankov/collada-dom.git && mkdir collada-dom/build && \
+#     cd collada-dom/build && \
+#     cmake .. -GNinja && \
+#     ninja -j4 && ninja install && \
+#     cd ../.. && rm -rf collada-dom
 
 RUN git clone https://github.com/Tencent/rapidjson.git && mkdir rapidjson/build && \
     cd rapidjson/build && \
@@ -42,13 +44,20 @@ RUN git clone https://github.com/rdiankov/fcl.git && mkdir fcl/build && \
     ninja -j4 && ninja install && \
     cd ../.. && rm -rf fcl
 
+# RUN git clone https://github.com/pybind/pybind11.git && mkdir pybind11/build && \
+#     cd pybind11/build && \
+#     git remote add woody https://github.com/woodychow/pybind11.git && \
+#     git fetch woody && \
+#     git remote add ciel https://github.com/cielavenir/pybind11.git && \
+#     git fetch ciel && \
+#     git checkout ciel/v2.9_ty && \
+#     cmake .. -GNinja -DPYBIND11_TEST=OFF -DPythonLibsNew_FIND_VERSION=2 && \
+#     ninja -j4 && ninja install && \
+#     cd ../.. && rm -rf pybind11
+
 RUN git clone https://github.com/pybind/pybind11.git && mkdir pybind11/build && \
     cd pybind11/build && \
-    git remote add woody https://github.com/woodychow/pybind11.git && \
-    git fetch woody && \
-    git remote add ciel https://github.com/cielavenir/pybind11.git && \
-    git fetch ciel && \
-    git checkout ciel/v2.9_ty && \
+    git checkout v2.9.2 && \
     cmake .. -GNinja -DPYBIND11_TEST=OFF -DPythonLibsNew_FIND_VERSION=2 && \
     ninja -j4 && ninja install && \
     cd ../.. && rm -rf pybind11
