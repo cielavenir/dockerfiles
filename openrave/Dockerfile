@@ -44,23 +44,23 @@ RUN git clone https://github.com/rdiankov/fcl.git && mkdir fcl/build && \
     ninja -j4 && ninja install && \
     cd ../.. && rm -rf fcl
 
-# RUN git clone https://github.com/pybind/pybind11.git && mkdir pybind11/build && \
-#     cd pybind11/build && \
-#     git remote add woody https://github.com/woodychow/pybind11.git && \
-#     git fetch woody && \
-#     git remote add ciel https://github.com/cielavenir/pybind11.git && \
-#     git fetch ciel && \
-#     git checkout ciel/v2.9_ty && \
-#     cmake .. -GNinja -DPYBIND11_TEST=OFF -DPythonLibsNew_FIND_VERSION=2 && \
-#     ninja -j4 && ninja install && \
-#     cd ../.. && rm -rf pybind11
-
 RUN git clone https://github.com/pybind/pybind11.git && mkdir pybind11/build && \
     cd pybind11/build && \
-    git checkout v2.9.2 && \
+    git remote add woody https://github.com/woodychow/pybind11.git && \
+    git fetch woody && \
+    git remote add ciel https://github.com/cielavenir/pybind11.git && \
+    git fetch ciel && \
+    git checkout ciel/v2.9_ty && \
     cmake .. -GNinja -DPYBIND11_TEST=OFF -DPythonLibsNew_FIND_VERSION=2 && \
     ninja -j4 && ninja install && \
     cd ../.. && rm -rf pybind11
+
+# RUN git clone https://github.com/pybind/pybind11.git && mkdir pybind11/build && \
+#     cd pybind11/build && \
+#     git checkout v2.9.2 && \
+#     cmake .. -GNinja -DPYBIND11_TEST=OFF -DPythonLibsNew_FIND_VERSION=2 && \
+#     ninja -j4 && ninja install && \
+#     cd ../.. && rm -rf pybind11
 
 RUN git clone https://github.com/msgpack/msgpack-c && mkdir msgpack-c/build && \
     cd msgpack-c/build && \
