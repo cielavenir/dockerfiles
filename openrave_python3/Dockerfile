@@ -1,12 +1,11 @@
-ARG BASE=debian:bullseye-slim
+ARG BASE=debian:bookworm-slim
 FROM index.docker.io/library/${BASE}
 
 RUN apt-get update -y && \
-    apt-get -y install dirmngr gnupg apt-transport-https liblog4cxx-dev libopenscenegraph-dev python2-dev python-setuptools python3-dev python3-setuptools python3-pip python3-nose libcoin-dev libsoqt520-dev && \
+    apt-get -y install dirmngr gnupg apt-transport-https liblog4cxx-dev libopenscenegraph-dev python3-dev python3-setuptools python3-pip python3-nose libcoin-dev libsoqt520-dev && \
     apt-get -y install g++ gfortran git pkg-config debhelper gettext zlib1g-dev libminizip-dev libxml2-dev liburiparser-dev libpcre3-dev libgmp-dev libmpfr-dev qtbase5-dev libqt5opengl5-dev libavcodec-dev libavformat-dev libswscale-dev libsimage-dev libode-dev libqhull-dev libann-dev libhdf5-serial-dev liblapack-dev libboost-iostreams-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-date-time-dev libboost-test-dev libmpfi-dev ffmpeg libtinyxml-dev libflann-dev sqlite3 libccd-dev libeigen3-dev && \
     apt-get update -y && apt-get -y install cmake-data cmake cmake-curses-gui python3-coverage python3-opengl python3-six ninja-build silversearcher-ag
 
-RUN python2 -m easy_install pip~=20.0 && python2 -m pip install pyopengl numpy==1.16.5 sympy==0.7.1 IPython==5.10.0 && python2 -m pip install scipy==1.2.3
 RUN python3 -m pip install numpy==1.21.5 IPython==7.31.1 && python3 -m pip install https://github.com/cielavenir/sympy/releases/download/0.7.1-py3/sympy-0.7.1-py3.tar.gz && python3 -m pip install scipy==1.7.3
 
 RUN git clone https://github.com/bulletphysics/bullet3.git && mkdir bullet3/build && \
@@ -51,14 +50,14 @@ RUN git clone https://github.com/rdiankov/fcl.git && mkdir fcl/build && \
 #     git remote add ciel https://github.com/cielavenir/pybind11.git && \
 #     git fetch ciel && \
 #     git checkout ciel/v2.9_ty && \
-#     cmake .. -GNinja -DPYBIND11_TEST=OFF -DPythonLibsNew_FIND_VERSION=2 && \
+#     cmake .. -GNinja -DPYBIND11_TEST=OFF -DPythonLibsNew_FIND_VERSION=3 && \
 #     ninja -j4 && ninja install && \
 #     cd ../.. && rm -rf pybind11
 
 RUN git clone https://github.com/pybind/pybind11.git && mkdir pybind11/build && \
     cd pybind11/build && \
     git checkout v2.9.2 && \
-    cmake .. -GNinja -DPYBIND11_TEST=OFF -DPythonLibsNew_FIND_VERSION=2 && \
+    cmake .. -GNinja -DPYBIND11_TEST=OFF -DPythonLibsNew_FIND_VERSION=3 && \
     ninja -j4 && ninja install && \
     cd ../.. && rm -rf pybind11
 
