@@ -6,7 +6,13 @@ RUN apt-get update -y && \
     apt-get -y install g++ gfortran git pkg-config debhelper gettext zlib1g-dev libminizip-dev libxml2-dev liburiparser-dev libpcre3-dev libgmp-dev libmpfr-dev qtbase5-dev libqt5opengl5-dev libavcodec-dev libavformat-dev libswscale-dev libsimage-dev libode-dev libqhull-dev libann-dev libhdf5-serial-dev liblapack-dev libboost-iostreams-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-date-time-dev libboost-test-dev libmpfi-dev ffmpeg libtinyxml-dev libflann-dev sqlite3 libccd-dev libeigen3-dev && \
     apt-get update -y && apt-get -y install cmake-data cmake cmake-curses-gui python3-coverage python3-opengl python3-six ninja-build silversearcher-ag
 
-RUN python3 -m pip install numpy==1.21.5 IPython==7.31.1 && python3 -m pip install https://github.com/cielavenir/sympy/releases/download/0.7.1-py3/sympy-0.7.1-py3.tar.gz && python3 -m pip install scipy==1.7.3
+RUN PREFIX=/root/openrave PYTHONRELPATH=$(python3 -c 'import distutils.sysconfig as sysconf; import os; print(sysconf.get_python_lib(prefix="/"))') bash -c ' \
+    mkdir -p ${PREFIX}${PYTHONRELPATH}; \
+    echo "import sys; sys.prefix=sys.exec_prefix=\"${PREFIX}\"; sys.path.insert(0,\"${PREFIX}${PYTHONRELPATH}\"); " > /usr/lib/python3/dist-packages/usercustomize.py; \
+    chown -RH 1000:1000 ${PREFIX}; \
+    '
+
+RUN python3 -m pip install numpy==1.24.3 IPython==8.14.0 && python3 -m pip install https://github.com/cielavenir/sympy/releases/download/0.7.1-py3/sympy-0.7.1-py3.tar.gz && python3 -m pip install scipy==1.10.1
 
 RUN git clone https://github.com/bulletphysics/bullet3.git && mkdir bullet3/build && \
     cd bullet3/build && \
@@ -81,11 +87,12 @@ RUN git clone https://github.com/rdiankov/openrave.git && mkdir openrave/build &
     git cherry-pick bb7e3d83f1bb6e93692f9557c205a7307c4beeb6 && \
     git cherry-pick 4828cebfbcefb1941e6715aef32f54008ed30f8c && \
     git cherry-pick 62998a607ec7a6f4b3a7614f9f59ccb8acf9415f && \
+    git cherry-pick 78993a4666ff2fe4c28945969d219d70d8a3ca05 && \
     FLAG_CMAKE_CXX_STANDARD="" && \
     if grep '^Ubuntu J' /etc/issue >/dev/null || grep '^Ubuntu 22' /etc/issue >/dev/null || grep '^Debian GNU/Linux 12' /etc/issue >/dev/null || grep '^Debian GNU/Linux bookworm' /etc/issue >/dev/null; then \
       FLAG_CMAKE_CXX_STANDARD="-DCMAKE_CXX_STANDARD=17"; \
     fi && \
-    cmake .. -GNinja -DUSE_PYBIND11_PYTHON_BINDINGS=ON ${FLAG_CMAKE_CXX_STANDARD} && \
+    VIRTUAL_ENV=/root/openrave cmake .. -GNinja -DUSE_PYBIND11_PYTHON_BINDINGS=ON -DOPT_PYTHON=OFF -DPython3_FIND_VIRTUALENV=STANDARD ${FLAG_CMAKE_CXX_STANDARD} -DOPT_VIDEORECORDING=OFF && \
     ninja -j4 && ninja install && \
     cd ../.. && rm -rf openrave
 
@@ -94,6 +101,7 @@ RUN for ver in 3.8 3.9 3.10 3.11 3.12; do \
       if [ -d /usr/local/lib/python${ver} ] && [ ! -d /usr/local/lib/python${ver}/dist-packages/openravepy ]; then \
         ln -s /usr/local/lib/python3/dist-packages/openravepy /usr/local/lib/python${ver}/dist-packages/openravepy; \
         ln -s /usr/local/lib/python3/dist-packages/sympy /usr/local/lib/python${ver}/dist-packages/sympy; \
+        ln -s /usr/local/lib/python${ver}/site-packages/openravepy /root/openrave/lib/python${ver}/site-packages/openravepy; \
       fi; \
     done
 
