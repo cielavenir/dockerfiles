@@ -3,7 +3,7 @@ FROM index.docker.io/library/${BASE}
 
 RUN apt-get update -y && \
     apt-get -y install dirmngr gnupg apt-transport-https liblog4cxx-dev libopenscenegraph-dev python3-dev python3-setuptools python3-pip python3-nose libcoin-dev libsoqt520-dev && \
-    apt-get -y install g++ gfortran git pkg-config debhelper gettext zlib1g-dev libminizip-dev libxml2-dev liburiparser-dev libpcre3-dev libgmp-dev libmpfr-dev qtbase5-dev libqt5opengl5-dev libavcodec-dev libavformat-dev libswscale-dev libsimage-dev libode-dev libqhull-dev libann-dev libhdf5-serial-dev liblapack-dev libboost-iostreams-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-date-time-dev libboost-test-dev libmpfi-dev ffmpeg libtinyxml-dev libflann-dev sqlite3 libccd-dev libeigen3-dev && \
+    apt-get -y install g++ gfortran git pkg-config debhelper gettext zlib1g-dev libminizip-dev libxml2-dev liburiparser-dev libpcre3-dev libgmp-dev libmpfr-dev qtbase5-dev libqt5opengl5-dev libavcodec-dev libavformat-dev libswscale-dev libsimage-dev libode-dev libqhull-dev libann-dev libhdf5-serial-dev liblapack-dev libboost-iostreams-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-date-time-dev libboost-test-dev libmpfi-dev ffmpeg libtinyxml-dev libflann-dev sqlite3 libccd-dev libeigen3-dev libgpgme-dev libgpgmepp-dev && \
     apt-get update -y && apt-get -y install cmake-data cmake cmake-curses-gui python3-coverage python3-opengl python3-six ninja-build silversearcher-ag
 
 RUN PREFIX=/root/openrave PYTHONRELPATH=$(python3 -c 'import distutils.sysconfig as sysconf; import os; print(sysconf.get_python_lib(prefix="/"))') bash -c ' \
@@ -69,10 +69,7 @@ RUN git clone https://github.com/pybind/pybind11.git && mkdir pybind11/build && 
 
 RUN git clone https://github.com/msgpack/msgpack-c && mkdir msgpack-c/build && \
     cd msgpack-c/build && \
-    git config --local user.email 'dockerfile@example.com' && \
-    git config --local user.name 'dockerfile' && \
-    git checkout cpp-1.3.0 && \
-    git cherry-pick 304ff96d04599401172568d042723ff507e78cc3 && \
+    git checkout cpp-6.0.0 && \
     cmake .. -GNinja -DMSGPACK_BUILD_EXAMPLES=OFF -DMSGPACK_BUILD_TESTS=OFF && \
     ninja -j4 && ninja install && \
     cd ../.. && rm -rf msgpack-c
@@ -97,7 +94,7 @@ RUN git clone https://github.com/rdiankov/openrave.git && mkdir openrave/build &
     cd ../.. && rm -rf openrave
 
 # https://bugs.launchpad.net/ubuntu/+source/python3-stdlib-extensions/+bug/1832215
-RUN for ver in 3.8 3.9 3.10 3.11 3.12; do \
+RUN for ver in 3.8 3.9 3.10 3.11 3.12 3.13; do \
       if [ -d /usr/local/lib/python${ver} ] && [ ! -d /usr/local/lib/python${ver}/dist-packages/openravepy ]; then \
         ln -s /usr/local/lib/python3/dist-packages/openravepy /usr/local/lib/python${ver}/dist-packages/openravepy; \
         ln -s /usr/local/lib/python3/dist-packages/sympy /usr/local/lib/python${ver}/dist-packages/sympy; \
