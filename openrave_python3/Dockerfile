@@ -83,7 +83,6 @@ RUN git clone https://github.com/rdiankov/openrave.git && mkdir openrave/build &
     git cherry-pick 53b90e081139a8d9c903d2e702322ba97a8bc494 && \
     git cherry-pick bb7e3d83f1bb6e93692f9557c205a7307c4beeb6 && \
     git cherry-pick 4828cebfbcefb1941e6715aef32f54008ed30f8c && \
-    git cherry-pick 62998a607ec7a6f4b3a7614f9f59ccb8acf9415f && \
     FLAG_CMAKE_CXX_STANDARD="" && \
     if grep '^Ubuntu J' /etc/issue >/dev/null || grep '^Ubuntu 22' /etc/issue >/dev/null || grep '^Debian GNU/Linux 12' /etc/issue >/dev/null || grep '^Debian GNU/Linux bookworm' /etc/issue >/dev/null; then \
       FLAG_CMAKE_CXX_STANDARD="-DCMAKE_CXX_STANDARD=17"; \
