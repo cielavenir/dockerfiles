@@ -19,6 +19,21 @@ RUN apt-src install python-typing-extensions && \
     dpkg -i python3-typing-extensions_4.9.0-1_all.deb && \
     rm -rf python-typing-extensions-4.9.0
 
+# python3-setuptools
+# oh here noble is too new, we need to borrow bullseye-backports
+RUN apt install -y wget && \
+    wget http://ftp.debian.org/debian/pool/main/s/setuptools/python3-pkg-resources_66.1.1-1~bpo11+1_all.deb && \
+    wget http://ftp.debian.org/debian/pool/main/s/setuptools/python3-setuptools_66.1.1-1~bpo11+1_all.deb && \
+    dpkg -i python3-pkg-resources_66.1.1-1~bpo11+1_all.deb python3-setuptools_66.1.1-1~bpo11+1_all.deb
+
+# python3-contourpy
+RUN apt-src install contourpy && \
+    cd contourpy-1.0.7 && \
+    debuild -uc -us && \
+    cd .. && \
+    dpkg -i python3-contourpy_1.0.7-1build2_amd64.deb && \
+    rm -rf contourpy-1.0.7
+
 # cython3
 RUN apt-src install cython && \
     cd cython-3.0.8 && \
