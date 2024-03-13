@@ -25,48 +25,21 @@ RUN apt-src install contourpy && \
     dpkg -i python3-contourpy_1.0.7-1_amd64.deb && \
     rm -rf contourpy-1.0.7
 
-# python3-flit-scm
-RUN apt-src install flit-scm && \
-    cd flit-scm-1.6.2 && \
-    debuild -uc -us && \
-    cd .. && \
-    dpkg -i python3-flit-scm_1.6.2-1_all.deb && \
-    rm -rf flit-scm-1.6.2
-
-# cython3
-RUN apt-src install cython && \
-    cd cython-0.29.32 && \
-    debuild -uc -us && \
-    cd .. && \
-    sudo dpkg -i cython3_0.29.32-2_amd64.deb && \
-    rm -rf cython-0.29.32
-
-# python3-exceptiongroup
-RUN apt-src install python-exceptiongroup && \
-    cd python-exceptiongroup-1.1.0 && \
-    debuild -uc -us && \
-    cd .. && \
-    dpkg -i python3-exceptiongroup_1.1.0-1_all.deb && \
-    rm -rf python-exceptiongroup-1.1.0
-
-# python3-hypothesis
-RUN apt-src install python-hypothesis && \
-    cd python-hypothesis-6.67.1 && \
-    DEB_BUILD_OPTIONS=nocheck debuild -uc -us && \
-    cd .. && \
-    dpkg -i python3-hypothesis_6.67.1-1_all.deb && \
-    rm -rf python-hypothesis-6.67.1
-
 # python3-numpy
-RUN apt install -y gfortran libblas-dev liblapack-dev meson python3-scipy
+RUN apt install -y gfortran libblas-dev liblapack-dev python3-all-dev python3-pytest python3-scipy python3-tz cython3 dvisvgm python3-hypothesis
 RUN git clone https://salsa.debian.org/python-team/packages/numpy && \
     cd numpy && \
-    git checkout debian/1%1.26.3-1 && \
+    git checkout debian/1%1.21.5-1 && \
+    echo 11 > debian/compat && \
+    sed -i '/debhelper-compat/d' debian/control && \
     apt install -y tzdata-legacy || sed -i '/tzdata-legacy/d' debian/control && \
     for file in `cat debian/patches/series`;do patch -p1 <debian/patches/$file;done && \
-    debuild -b -uc -us && \
+    sed -i 's/cython3 (>= 0.29.24)/cython3 (>= 0.29.21)/' debian/control && \
+    sed -i 's/0.29.24/0.29.21/' pyproject.toml && \
+    sed -i 's/0.29.24/0.29.21/' tools/cythonize.py && \
+    DEB_BUILD_PROFILES=nodoc DEB_BUILD_OPTIONS=nodoc debuild -b -uc -us && \
     cd .. && \
-    dpkg -i python3-numpy_1.26.3-1_amd64.deb && \
+    dpkg -i python3-numpy_1.21.5-1_amd64.deb && \
     rm -rf numpy && \
     rm -rf /tmp/pytest-of-root
 

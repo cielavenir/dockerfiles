@@ -34,31 +34,9 @@ RUN apt-src install contourpy && \
     dpkg -i python3-contourpy_1.0.7-1build2_amd64.deb && \
     rm -rf contourpy-1.0.7
 
-# cython3
-RUN apt-src install cython && \
-    cd cython-3.0.8 && \
-    debuild -uc -us && \
-    cd .. && \
-    sudo dpkg -i cython3_3.0.8-1ubuntu1_amd64.deb && \
-    rm -rf cython-3.0.8
-
-# python3-numpy
-RUN apt install -y gfortran libblas-dev liblapack-dev meson python3-scipy python3-pytest
-RUN git clone https://salsa.debian.org/python-team/packages/numpy && \
-    cd numpy && \
-    git checkout debian/1%1.26.3-1 && \
-    echo 11 > debian/compat && \
-    sed -i '/debhelper-compat/d' debian/control && \
-    apt install -y tzdata-legacy || sed -i '/tzdata-legacy/d' debian/control && \
-    for file in `cat debian/patches/series`;do patch -p1 <debian/patches/$file;done && \
-    debuild -b -uc -us && \
-    cd .. && \
-    dpkg -i python3-numpy_1.26.3-1_amd64.deb && \
-    rm -rf numpy && \
-    rm -rf /tmp/pytest-of-root
-
 # python3-matplotlib
-RUN apt install -y cm-super-minimal dvipng ffmpeg fonts-noto-cjk fonts-wqy-zenhei ghostscript graphviz imagemagick libfreetype6-dev libpng-dev libqhull-dev locales-all python3-cairo python3-cairocffi python3-colorspacious python3-cxx-dev python3-fonttools python3-gi python3-ipywidgets python3-numpydoc python3-pandas python3-pikepdf python3-pil.imagetk python3-pyqt5 python3-tk python3-tornado python3-wxgtk4.0 python3-xarray tcl8.6-dev texlive-base texlive-fonts-recommended texlive-latex-extra texlive-latex-recommended texlive-luatex texlive-science texlive-xetex tk8.6-dev xvfb
+RUN apt install -y gfortran libblas-dev liblapack-dev meson python3-scipy python3-pytest python3-numpy && \
+    apt install -y cm-super-minimal dvipng ffmpeg fonts-noto-cjk fonts-wqy-zenhei ghostscript graphviz imagemagick libfreetype6-dev libpng-dev libqhull-dev locales-all python3-cairo python3-cairocffi python3-colorspacious python3-cxx-dev python3-fonttools python3-gi python3-ipywidgets python3-numpydoc python3-pandas python3-pikepdf python3-pil.imagetk python3-pyqt5 python3-tk python3-tornado python3-wxgtk4.0 python3-xarray tcl8.6-dev texlive-base texlive-fonts-recommended texlive-latex-extra texlive-latex-recommended texlive-luatex texlive-science texlive-xetex tk8.6-dev xvfb
 RUN git clone https://salsa.debian.org/cielavenir/matplotlib && \
     cd matplotlib && \
     git checkout build3.8.3 && \
