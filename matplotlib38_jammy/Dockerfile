@@ -1,4 +1,4 @@
-ARG BASE=debian:jammy-slim
+ARG BASE=ubuntu:jammy
 FROM index.docker.io/library/${BASE}
 
 RUN apt-get update -y && \
