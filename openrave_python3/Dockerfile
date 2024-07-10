@@ -87,7 +87,7 @@ RUN git clone https://github.com/rdiankov/openrave.git && mkdir openrave/build &
     if grep '^Ubuntu J' /etc/issue >/dev/null || grep '^Ubuntu 22' /etc/issue >/dev/null || grep '^Debian GNU/Linux 12' /etc/issue >/dev/null || grep '^Debian GNU/Linux bookworm' /etc/issue >/dev/null; then \
       FLAG_CMAKE_CXX_STANDARD="-DCMAKE_CXX_STANDARD=17"; \
     fi && \
-    VIRTUAL_ENV=/root/openrave cmake .. -GNinja -DUSE_PYBIND11_PYTHON_BINDINGS=ON -DOPT_PYTHON=OFF -DOPT_BULLET=OFF -DPython3_FIND_VIRTUALENV=STANDARD ${FLAG_CMAKE_CXX_STANDARD} `&& \
+    VIRTUAL_ENV=/root/openrave cmake .. -GNinja -DUSE_PYBIND11_PYTHON_BINDINGS=ON -DOPT_PYTHON=OFF -DOPT_BULLET=OFF -DPython3_FIND_VIRTUALENV=STANDARD ${FLAG_CMAKE_CXX_STANDARD} && \
     ninja -j4 && ninja install && \
     cd ../.. && rm -rf openrave
 
