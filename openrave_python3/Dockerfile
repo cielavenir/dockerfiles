@@ -12,7 +12,7 @@ RUN PREFIX=/root/openrave PYTHONRELPATH=$(python3 -c 'import distutils.sysconfig
     chown -RH 1000:1000 ${PREFIX}; \
     '
 
-RUN python3 -m pip install numpy==1.24.3 IPython==8.14.0 && python3 -m pip install https://github.com/cielavenir/sympy/releases/download/0.7.1-py3/sympy-0.7.1-py3.tar.gz && python3 -m pip install scipy==1.10.1
+RUN python3 -m pip install numpy==1.26.4 IPython==8.14.0 && python3 -m pip install mpmath==0.19 sympy==1.11.1 && python3 -m pip install scipy==1.10.1
 
 RUN git clone https://github.com/bulletphysics/bullet3.git && mkdir bullet3/build && \
     cd bullet3/build && \
@@ -87,7 +87,7 @@ RUN git clone https://github.com/rdiankov/openrave.git && mkdir openrave/build &
     if grep '^Ubuntu J' /etc/issue >/dev/null || grep '^Ubuntu 22' /etc/issue >/dev/null || grep '^Debian GNU/Linux 12' /etc/issue >/dev/null || grep '^Debian GNU/Linux bookworm' /etc/issue >/dev/null; then \
       FLAG_CMAKE_CXX_STANDARD="-DCMAKE_CXX_STANDARD=17"; \
     fi && \
-    VIRTUAL_ENV=/root/openrave cmake .. -GNinja -DUSE_PYBIND11_PYTHON_BINDINGS=ON -DOPT_PYTHON=OFF -DPython3_FIND_VIRTUALENV=STANDARD ${FLAG_CMAKE_CXX_STANDARD} && \
+    VIRTUAL_ENV=/root/openrave cmake .. -GNinja -DUSE_PYBIND11_PYTHON_BINDINGS=ON -DOPT_PYTHON=OFF -DOPT_BULLET=OFF -DPython3_FIND_VIRTUALENV=STANDARD ${FLAG_CMAKE_CXX_STANDARD} `&& \
     ninja -j4 && ninja install && \
     cd ../.. && rm -rf openrave
 
