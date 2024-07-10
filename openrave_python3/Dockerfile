@@ -12,7 +12,7 @@ RUN PREFIX=/root/openrave PYTHONRELPATH=$(python3 -c 'import distutils.sysconfig
     chown -RH 1000:1000 ${PREFIX}; \
     '
 
-RUN python3 -m pip install numpy==1.24.3 IPython==8.14.0 && python3 -m pip install https://github.com/cielavenir/sympy/releases/download/0.7.1-py3/sympy-0.7.1-py3.tar.gz && python3 -m pip install scipy==1.10.1
+RUN python3 -m pip install numpy==1.26.4 IPython==8.14.0 && python3 -m pip install mpmath==0.19 sympy==1.11.1 && python3 -m pip install scipy==1.10.1
 
 RUN git clone https://github.com/bulletphysics/bullet3.git && mkdir bullet3/build && \
     cd bullet3/build && \
