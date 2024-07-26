@@ -13,35 +13,40 @@ RUN git clone https://github.com/bulletphysics/bullet3.git && mkdir bullet3/buil
     cd bullet3/build && \
     git checkout 2.82 && \
     cmake .. -GNinja -DINSTALL_LIBS=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_C_FLAGS=-fPIC -DCMAKE_CXX_FLAGS=-fPIC && \
-    ninja -j4 && ninja install && \
+    ninja -j4 && \
+    ninja install && \
     cd ../.. && rm -rf bullet3
 
 # Use openrave/3rdparty collada-dom
 # RUN git clone https://github.com/rdiankov/collada-dom.git && mkdir collada-dom/build && \
 #     cd collada-dom/build && \
 #     cmake .. -GNinja && \
-#     ninja -j4 && ninja install && \
+#     ninja -j4 && \
+#     ninja install && \
 #     cd ../.. && rm -rf collada-dom
 
 # There are no stable version available
 RUN git clone https://github.com/Tencent/rapidjson.git && mkdir rapidjson/build && \
     cd rapidjson/build && \
     cmake .. -GNinja -DRAPIDJSON_HAS_STDSTRING=ON -DRAPIDJSON_BUILD_DOC=OFF -DRAPIDJSON_BUILD_EXAMPLES=OFF -DRAPIDJSON_BUILD_TESTS=OFF && \
-    ninja -j4 && ninja install && \
+    ninja -j4 && \
+    ninja install && \
     cd ../.. && rm -rf rapidjson
 
 RUN git clone https://github.com/assimp/assimp.git && mkdir assimp/build && \
     cd assimp/build && \
     git checkout v5.2.5 && \
     cmake .. -GNinja && \
-    ninja -j4 && ninja install && \
+    ninja -j4 && \
+    ninja install && \
     cd ../.. && rm -rf assimp
 
 RUN git clone https://github.com/rdiankov/fcl.git && mkdir fcl/build && \
     cd fcl/build && \
     git checkout origin/trimeshContactPoints20200813 && \
     cmake .. -GNinja -DFCL_BUILD_TESTS=OFF && \
-    ninja -j4 && ninja install && \
+    ninja -j4 && \
+    ninja install && \
     cd ../.. && rm -rf fcl
 
 RUN git clone https://github.com/pybind/pybind11.git && mkdir pybind11/build && \
@@ -52,7 +57,8 @@ RUN git clone https://github.com/pybind/pybind11.git && mkdir pybind11/build && 
     git fetch ciel && \
     git checkout ciel/v2.9_ty && \
     cmake .. -GNinja -DPYBIND11_TEST=OFF -DPythonLibsNew_FIND_VERSION=2 && \
-    ninja -j4 && ninja install && \
+    ninja -j4 && \
+    ninja install && \
     cd ../.. && rm -rf pybind11
 
 # RUN git clone https://github.com/pybind/pybind11.git && mkdir pybind11/build && \
