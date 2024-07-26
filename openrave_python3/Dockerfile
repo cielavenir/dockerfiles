@@ -86,7 +86,7 @@ RUN git clone https://github.com/rdiankov/openrave.git && mkdir openrave/build &
     cd openrave/build && \
     git config --local user.email 'dockerfile@vagrant.example.com' && \
     git config --local user.name 'dockerfile' && \
-    git checkout origin/production && \
+    git checkout origin/1264-ffmpeg5-compat && \
     git cherry-pick cb96ec7318af7753e947a333dafe49bf6cacef01 && \
     git cherry-pick 53b90e081139a8d9c903d2e702322ba97a8bc494 && \
     git cherry-pick bb7e3d83f1bb6e93692f9557c205a7307c4beeb6 && \
