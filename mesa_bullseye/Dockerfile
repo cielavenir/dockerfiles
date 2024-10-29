@@ -82,6 +82,9 @@ RUN apt-src install wayland-protocols && \
     cd .. && \
     dpkg -i wayland-protocols_1.37-1~bpo12+1_all.deb
 
+# Somehow apt.llvm.org's libclc-15 does not provide spirv, copy from Debian bookworm binary
+COPY spirv-mesa3d-.spv spirv64-mesa3d-.spv /usr/lib/clc/
+
 RUN apt-src install mesa
 RUN cd mesa-24.2.4 && \
     debuild -uc -us && \
