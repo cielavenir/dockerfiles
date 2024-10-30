@@ -91,3 +91,20 @@ RUN cd mesa-24.2.4 && \
     cd ..
 
 # no need to dpkg -i mesa as it is the final product
+
+# Now build libdrm i386, required for wine
+RUN dpkg --add-architecture i386 && \
+    apt update -y && \
+    apt -y install g++-i686-linux-gnu libpciaccess-dev:i386 libudev-dev:i386 libx11-dev:i386 libexpat1-dev:i386 libffi-dev:i386 libxml2-dev:i386
+
+RUN rm -rf libdrm-2.4.123 && \
+    apt-src install libdrm && \
+    cd libdrm-2.4.123 && \
+    debuild -ai386 -uc -us && \
+    cd ..
+
+RUN rm -rf wayland-1.23.0 && \
+    apt-src install wayland && \
+    cd wayland-1.23.0 && \
+    debuild -ai386 -uc -us && \
+    cd ..
