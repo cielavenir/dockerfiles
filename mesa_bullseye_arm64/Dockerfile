@@ -97,9 +97,15 @@ RUN apt-src install xtensor && \
     cd .. && \
     dpkg -i libxtensor-dev_0.24.3-1_arm64.deb
 
-#RUN apt-src install mesa
-#RUN cd mesa-24.2.4 && \
-#    debuild -uc -us && \
-#    cd ..
+RUN apt-src install flatbuffers && \
+    cd flatbuffers-2.0.8+dfsg1 && \
+    debuild -uc -us && \
+    cd .. && \
+    dpkg -i libflatbuffers2_2.0.8+dfsg1-2_arm64.deb libflatbuffers-dev_2.0.8+dfsg1-2_arm64.deb flatbuffers-compiler_2.0.8+dfsg1-2_arm64.deb flatbuffers-compiler-dev_2.0.8+dfsg1-2_arm64.deb
+
+RUN apt-src install mesa
+RUN cd mesa-24.2.4 && \
+    debuild -uc -us && \
+    cd ..
 
 # no need to dpkg -i mesa as it is the final product
