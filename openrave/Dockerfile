@@ -7,12 +7,12 @@ RUN apt-get update -y && \
     apt-get update -y && apt-get -y install cmake-data cmake cmake-curses-gui python3-coverage python3-opengl python3-six ninja-build silversearcher-ag
 
 RUN python2 -m easy_install pip~=20.0 && python2 -m pip install pyopengl numpy==1.16.5 sympy==0.7.1 IPython==5.10.0 && python2 -m pip install scipy==1.2.3
-RUN python3 -m pip install numpy==1.21.5 IPython==7.31.1 && python3 -m pip install https://github.com/cielavenir/sympy/releases/download/0.7.1-py3/sympy-0.7.1-py3.tar.gz && python3 -m pip install scipy==1.7.3
+RUN python3 -m pip install numpy==1.26.4 IPython==7.31.1 && python3 -m pip install https://github.com/cielavenir/sympy/releases/download/0.7.1-py3/sympy-0.7.1-py3.tar.gz && python3 -m pip install scipy==1.10.1
 
 RUN git clone https://github.com/bulletphysics/bullet3.git && mkdir bullet3/build && \
     cd bullet3/build && \
     git checkout 2.82 && \
-    cmake .. -GNinja -DINSTALL_LIBS=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_C_FLAGS=-fPIC -DCMAKE_CXX_FLAGS=-fPIC && \
+    cmake .. -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DINSTALL_LIBS=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_C_FLAGS=-fPIC -DCMAKE_CXX_FLAGS=-fPIC && \
     ninja -j4 && \
     ninja install && \
     cd ../.. && rm -rf bullet3
@@ -20,7 +20,7 @@ RUN git clone https://github.com/bulletphysics/bullet3.git && mkdir bullet3/buil
 # Use openrave/3rdparty collada-dom
 # RUN git clone https://github.com/rdiankov/collada-dom.git && mkdir collada-dom/build && \
 #     cd collada-dom/build && \
-#     cmake .. -GNinja && \
+#     cmake .. -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
 #     ninja -j4 && \
 #     ninja install && \
 #     cd ../.. && rm -rf collada-dom
@@ -28,7 +28,7 @@ RUN git clone https://github.com/bulletphysics/bullet3.git && mkdir bullet3/buil
 # There are no stable version available
 RUN git clone https://github.com/Tencent/rapidjson.git && mkdir rapidjson/build && \
     cd rapidjson/build && \
-    cmake .. -GNinja -DRAPIDJSON_HAS_STDSTRING=ON -DRAPIDJSON_BUILD_DOC=OFF -DRAPIDJSON_BUILD_EXAMPLES=OFF -DRAPIDJSON_BUILD_TESTS=OFF && \
+    cmake .. -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DRAPIDJSON_HAS_STDSTRING=ON -DRAPIDJSON_BUILD_DOC=OFF -DRAPIDJSON_BUILD_EXAMPLES=OFF -DRAPIDJSON_BUILD_TESTS=OFF && \
     ninja -j4 && \
     ninja install && \
     cd ../.. && rm -rf rapidjson
@@ -36,7 +36,7 @@ RUN git clone https://github.com/Tencent/rapidjson.git && mkdir rapidjson/build 
 RUN git clone https://github.com/assimp/assimp.git && mkdir assimp/build && \
     cd assimp/build && \
     git checkout v5.2.5 && \
-    cmake .. -GNinja && \
+    cmake .. -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
     ninja -j4 && \
     ninja install && \
     cd ../.. && rm -rf assimp
@@ -44,7 +44,7 @@ RUN git clone https://github.com/assimp/assimp.git && mkdir assimp/build && \
 RUN git clone https://github.com/rdiankov/fcl.git && mkdir fcl/build && \
     cd fcl/build && \
     git checkout origin/trimeshContactPoints20200813 && \
-    cmake .. -GNinja -DFCL_BUILD_TESTS=OFF && \
+    cmake .. -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DFCL_BUILD_TESTS=OFF && \
     ninja -j4 && \
     ninja install && \
     cd ../.. && rm -rf fcl
@@ -56,7 +56,7 @@ RUN git clone https://github.com/pybind/pybind11.git && mkdir pybind11/build && 
     git remote add ciel https://github.com/cielavenir/pybind11.git && \
     git fetch ciel && \
     git checkout ciel/v2.9_ty && \
-    cmake .. -GNinja -DPYBIND11_TEST=OFF -DPythonLibsNew_FIND_VERSION=2 && \
+    cmake .. -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DPYBIND11_TEST=OFF -DPythonLibsNew_FIND_VERSION=2 && \
     ninja -j4 && \
     ninja install && \
     cd ../.. && rm -rf pybind11
@@ -64,14 +64,14 @@ RUN git clone https://github.com/pybind/pybind11.git && mkdir pybind11/build && 
 # RUN git clone https://github.com/pybind/pybind11.git && mkdir pybind11/build && \
 #     cd pybind11/build && \
 #     git checkout v2.9.2 && \
-#     cmake .. -GNinja -DPYBIND11_TEST=OFF -DPythonLibsNew_FIND_VERSION=2 && \
+#     cmake .. -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DPYBIND11_TEST=OFF -DPythonLibsNew_FIND_VERSION=2 && \
 #     ninja -j4 && ninja install && \
 #     cd ../.. && rm -rf pybind11
 
 RUN git clone https://github.com/msgpack/msgpack-c && mkdir msgpack-c/build && \
     cd msgpack-c/build && \
     git checkout cpp-6.0.0 && \
-    cmake .. -GNinja -DMSGPACK_BUILD_EXAMPLES=OFF -DMSGPACK_BUILD_TESTS=OFF && \
+    cmake .. -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DMSGPACK_BUILD_EXAMPLES=OFF -DMSGPACK_BUILD_TESTS=OFF && \
     ninja -j4 && ninja install && \
     cd ../.. && rm -rf msgpack-c
 
@@ -88,7 +88,7 @@ RUN git clone https://github.com/rdiankov/openrave.git && mkdir openrave/build &
     if grep '^Ubuntu J' /etc/issue >/dev/null || grep '^Ubuntu 22' /etc/issue >/dev/null || grep '^Debian GNU/Linux 12' /etc/issue >/dev/null || grep '^Debian GNU/Linux bookworm' /etc/issue >/dev/null; then \
       FLAG_CMAKE_CXX_STANDARD="-DCMAKE_CXX_STANDARD=17"; \
     fi && \
-    cmake .. -GNinja -DUSE_PYBIND11_PYTHON_BINDINGS=ON ${FLAG_CMAKE_CXX_STANDARD} && \
+    cmake .. -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DUSE_PYBIND11_PYTHON_BINDINGS=ON -DOPT_BULLET=OFF ${FLAG_CMAKE_CXX_STANDARD} && \
     ninja -j4 && ninja install && \
     cd ../.. && rm -rf openrave
 
