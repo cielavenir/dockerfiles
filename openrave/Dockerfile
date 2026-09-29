@@ -39,12 +39,15 @@ RUN python2 -m pip install pyopengl numpy==1.16.5 sympy==0.7.1 IPython==5.10.0 &
 #     cd ../.. && rm -rf bullet3
 
 # Use openrave/3rdparty collada-dom
-# RUN git clone https://github.com/rdiankov/collada-dom.git && mkdir collada-dom/build && \
-#     cd collada-dom/build && \
-#     cmake .. -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
-#     ninja -j4 && \
-#     ninja install && \
-#     cd ../.. && rm -rf collada-dom
+# But older openrave has issues about Werror-shadow
+RUN if grep '^Ubuntu 16' /etc/issue >/dev/null || grep '^Ubuntu 18' /etc/issue >/dev/null || grep '^Debian GNU/Linux 9' /etc/issue >/dev/null || grep '^Debian GNU/Linux 10' /etc/issue >/dev/null; then \
+      git clone https://github.com/rdiankov/collada-dom.git && mkdir collada-dom/build && \
+      cd collada-dom/build && \
+      cmake .. -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
+      ninja -j4 && \
+      ninja install && \
+      cd ../.. && rm -rf collada-dom; \
+    fi
 
 # There are no stable version available
 RUN git clone https://github.com/Tencent/rapidjson.git && mkdir rapidjson/build && \
@@ -56,7 +59,11 @@ RUN git clone https://github.com/Tencent/rapidjson.git && mkdir rapidjson/build 
 
 RUN git clone https://github.com/assimp/assimp.git && mkdir assimp/build && \
     cd assimp/build && \
-    git checkout v5.2.5 && \
+    if grep '^Debian GNU/Linux 9' /etc/issue >/dev/null; then \
+      git checkout v5.0.1; \
+    else \
+      git checkout v5.2.5; \
+    fi && \
     cmake .. -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
     ninja -j4 && \
     ninja install && \
@@ -102,12 +109,13 @@ RUN git clone https://github.com/rdiankov/openrave.git && mkdir openrave/build &
     cd openrave/build && \
     git config --local user.email 'dockerfile@vagrant.example.com' && \
     git config --local user.name 'dockerfile' && \
-    if grep '^Ubuntu 18' /etc/issue >/dev/null; then \
-      git checkout 467af2068f2e8733f02b55a325a5f4a49b0666ef; \
+    FLAG_CMAKE_CXX_STANDARD="" && \
+    if grep '^Ubuntu 16' /etc/issue >/dev/null || grep '^Ubuntu 18' /etc/issue >/dev/null || grep '^Debian GNU/Linux 9' /etc/issue >/dev/null || grep '^Debian GNU/Linux 10' /etc/issue >/dev/null; then \
+      FLAG_CMAKE_CXX_STANDARD="-DCMAKE_CXX_STANDARD=14"; \
+      git checkout f0cb72c24e162d387682e06add312b844b67c945; \
     else \
       git checkout 524f0dc5aef67ac973a453ba8d5f7ce3d2291c20; \
     fi && \
-    FLAG_CMAKE_CXX_STANDARD="" && \
     if grep '^Ubuntu 22' /etc/issue >/dev/null || grep '^Debian GNU/Linux 12' /etc/issue >/dev/null; then \
       FLAG_CMAKE_CXX_STANDARD="-DCMAKE_CXX_STANDARD=17"; \
     fi && \
@@ -130,4 +138,8 @@ RUN git clone https://github.com/rdiankov/openrave.git && mkdir openrave/build &
 # somehow this is required to load plugins properly
 ENV OPENRAVE_PLUGINS=
 
-RUN apt-get update -y && apt-get install -y python-is-python2
+RUN if grep '^Ubuntu 16' /etc/issue >/dev/null || grep '^Ubuntu 18' /etc/issue >/dev/null || grep '^Debian GNU/Linux 9' /etc/issue >/dev/null || grep '^Debian GNU/Linux 10' /etc/issue >/dev/null; then \
+      true; \
+    else \
+      apt-get update -y && apt-get install -y python-is-python2; \
+    fi
