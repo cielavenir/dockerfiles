@@ -6,6 +6,8 @@ ENV TZ=Etc/UTC
 
 RUN if grep '^Debian GNU/Linux 9' /etc/issue >/dev/null; then \
       echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list; \
+      echo "deb http://archive.debian.org/debian stretch-backports main" >> /etc/apt/sources.list; \
+      echo "deb http://archive.debian.org/debian stretch-backports-sloppy main" >> /etc/apt/sources.list; \
       printf 'Package: *\nPin: origin "archive.debian.org"\nPin-Priority: 1001\n' > /etc/apt/preferences.d/archive-downgrade; \
     elif grep '^Debian GNU/Linux 10' /etc/issue >/dev/null; then \
       echo "deb http://archive.debian.org/debian buster main" > /etc/apt/sources.list; \
@@ -16,14 +18,19 @@ RUN if grep '^Debian GNU/Linux 9' /etc/issue >/dev/null; then \
     fi
 
 RUN if grep '^Ubuntu 16' /etc/issue >/dev/null || grep '^Ubuntu 18' /etc/issue >/dev/null || grep '^Debian GNU/Linux 9' /etc/issue >/dev/null; then \
-      PYTHON2="python-dev libcoin80-dev libsoqt4-dev"; \
+      PYTHON2="python-dev libcoin80-dev libsoqt4-dev libopenscenegraph-3.4-dev"; \
     else \
-      PYTHON2="python2-dev libcoin-dev libsoqt520-dev"; \
+      PYTHON2="python2-dev libcoin-dev libsoqt520-dev libopenscenegraph-dev"; \
     fi && \
     apt-get update -y && \
-    apt-get -y install --allow-downgrades dirmngr gnupg apt-transport-https liblog4cxx-dev libopenscenegraph-dev ${PYTHON2} python-setuptools python3-dev python3-setuptools python3-pip python3-nose && \
+    apt-get -y install --allow-downgrades dirmngr gnupg apt-transport-https liblog4cxx-dev ${PYTHON2} python-setuptools python3-dev python3-setuptools python3-pip python3-nose && \
     apt-get -y install --allow-downgrades g++ gfortran git pkg-config debhelper gettext zlib1g-dev libminizip-dev libxml2-dev liburiparser-dev libpcre3-dev libgmp-dev libmpfr-dev qtbase5-dev libqt5opengl5-dev libavcodec-dev libavformat-dev libswscale-dev libsimage-dev libode-dev libqhull-dev libann-dev libhdf5-serial-dev liblapack-dev libboost-iostreams-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-date-time-dev libboost-test-dev libmpfi-dev ffmpeg libtinyxml-dev libflann-dev sqlite3 libccd-dev libeigen3-dev libgpgme-dev libgpgmepp-dev && \
     apt-get update -y && apt-get -y install --allow-downgrades cmake-data cmake cmake-curses-gui python3-coverage python3-opengl python3-six ninja-build silversearcher-ag
+
+# otherwise `/usr/bin/ld: cannot find -lOpenGL::OpenGL` is shown
+RUN if grep '^Debian GNU/Linux 9' /etc/issue >/dev/null; then \
+      apt-get -y install cmake/stretch-backports; \
+    fi
 
 RUN if grep '^Ubuntu 16' /etc/issue >/dev/null || grep '^Ubuntu 18' /etc/issue >/dev/null || grep '^Debian GNU/Linux 9' /etc/issue >/dev/null; then \
       apt-get -y install python-pip; \
@@ -32,7 +39,13 @@ RUN if grep '^Ubuntu 16' /etc/issue >/dev/null || grep '^Ubuntu 18' /etc/issue >
     fi
 
 # pyopengl==3.1.7 is the final version supporting Py2 due to pyproject.toml migration.
-RUN python2 -m pip install pyopengl==3.1.7 numpy==1.16.5 sympy==0.7.1 IPython==5.10.0 && python2 -m pip install scipy==1.2.3
+RUN if grep '^Debian GNU/Linux 9' /etc/issue >/dev/null; then \
+      python2 -m pip install pyopengl==3.1.6; \
+    else \
+      python2 -m pip install pyopengl==3.1.7; \
+    fi
+
+RUN python2 -m pip install numpy==1.16.5 sympy==0.7.1 IPython==5.10.0 && python2 -m pip install scipy==1.2.3
 
 # RUN python3 -m pip install numpy==1.26.4 IPython==7.31.1 && python3 -m pip install https://github.com/cielavenir/sympy/releases/download/0.7.1-py3/sympy-0.7.1-py3.tar.gz && python3 -m pip install scipy==1.10.1
 
@@ -119,7 +132,7 @@ RUN git clone https://github.com/rdiankov/openrave.git && mkdir openrave/build &
     FLAG_CMAKE_CXX_STANDARD="" && \
     if grep '^Ubuntu 16' /etc/issue >/dev/null || grep '^Ubuntu 18' /etc/issue >/dev/null || grep '^Debian GNU/Linux 9' /etc/issue >/dev/null || grep '^Debian GNU/Linux 10' /etc/issue >/dev/null; then \
       FLAG_CMAKE_CXX_STANDARD="-DCMAKE_CXX_STANDARD=14"; \
-      git checkout f0cb72c24e162d387682e06add312b844b67c945; \
+      git checkout 19a88dbe96e87084a4b153fa3171b3a238b6668b; \
     else \
       git checkout 1bea6c5fc81eb12b8479236e44d78b597db2d29e; \
     fi && \
