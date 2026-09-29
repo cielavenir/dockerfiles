@@ -32,12 +32,16 @@ RUN python3 -m pip install pynose==1.5.4 && python3 -m pip install numpy==2.0.2 
 #     cd ../.. && rm -rf bullet3
 
 # Use openrave/3rdparty collada-dom
-# RUN git clone https://github.com/rdiankov/collada-dom.git && mkdir collada-dom/build && \
-#     cd collada-dom/build && \
-#     cmake .. -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
-#     ninja -j4 && \
-#     ninja install && \
-#     cd ../.. && rm -rf collada-dom
+# Ubuntu26's boost is so new that embeded boost::filesystem is not compatible
+# RUN if grep '^Ubuntu 26' /etc/issue >/dev/null; then \
+#       git clone https://github.com/cielavenir/collada-dom.git && mkdir collada-dom/build && \
+#       cd collada-dom/build && \
+#       git checkout removeBoostSystem && \
+#       cmake .. -GNinja -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_BUILD_TYPE=RelWithDebInfo && \
+#       ninja -j4 && \
+#       ninja install && \
+#       cd ../.. && rm -rf collada-dom; \
+#     fi
 
 # There are no stable version available
 RUN git clone https://github.com/Tencent/rapidjson.git && mkdir rapidjson/build && \
@@ -100,7 +104,7 @@ RUN git clone https://github.com/rdiankov/openrave.git && mkdir openrave/build &
     cd openrave/build && \
     git config --local user.email 'dockerfile@vagrant.example.com' && \
     git config --local user.name 'dockerfile' && \
-    git checkout origin/production && \
+    git checkout fe8f3e7aa40876d2fb200abbecaee7372ed79098 && \
     FLAG_CMAKE_CXX_STANDARD="" && \
     if grep '^Ubuntu J' /etc/issue >/dev/null || grep '^Ubuntu 22' /etc/issue >/dev/null || grep '^Debian GNU/Linux 12' /etc/issue >/dev/null || grep '^Debian GNU/Linux bookworm' /etc/issue >/dev/null; then \
       FLAG_CMAKE_CXX_STANDARD="-DCMAKE_CXX_STANDARD=17"; \

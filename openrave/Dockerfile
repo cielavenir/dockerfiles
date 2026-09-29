@@ -25,8 +25,14 @@ RUN if grep '^Ubuntu 16' /etc/issue >/dev/null || grep '^Ubuntu 18' /etc/issue >
     apt-get -y install --allow-downgrades g++ gfortran git pkg-config debhelper gettext zlib1g-dev libminizip-dev libxml2-dev liburiparser-dev libpcre3-dev libgmp-dev libmpfr-dev qtbase5-dev libqt5opengl5-dev libavcodec-dev libavformat-dev libswscale-dev libsimage-dev libode-dev libqhull-dev libann-dev libhdf5-serial-dev liblapack-dev libboost-iostreams-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-thread-dev libboost-date-time-dev libboost-test-dev libmpfi-dev ffmpeg libtinyxml-dev libflann-dev sqlite3 libccd-dev libeigen3-dev libgpgme-dev libgpgmepp-dev && \
     apt-get update -y && apt-get -y install --allow-downgrades cmake-data cmake cmake-curses-gui python3-coverage python3-opengl python3-six ninja-build silversearcher-ag
 
-RUN apt-get -y install python-pip
-RUN python2 -m pip install pyopengl numpy==1.16.5 sympy==0.7.1 IPython==5.10.0 && python2 -m pip install scipy==1.2.3
+RUN if grep '^Ubuntu 16' /etc/issue >/dev/null || grep '^Ubuntu 18' /etc/issue >/dev/null || grep '^Debian GNU/Linux 9' /etc/issue >/dev/null; then \
+      apt-get -y install python-pip; \
+    else \
+      python2 -m easy_install pip~=20.0; \
+    fi
+
+# pyopengl==3.1.7 is the final version supporting Py2 due to pyproject.toml migration.
+RUN python2 -m pip install pyopengl==3.1.7 numpy==1.16.5 sympy==0.7.1 IPython==5.10.0 && python2 -m pip install scipy==1.2.3
 
 # RUN python3 -m pip install numpy==1.26.4 IPython==7.31.1 && python3 -m pip install https://github.com/cielavenir/sympy/releases/download/0.7.1-py3/sympy-0.7.1-py3.tar.gz && python3 -m pip install scipy==1.10.1
 
@@ -103,7 +109,8 @@ RUN git clone https://github.com/msgpack/msgpack-c && mkdir msgpack-c/build && \
     ninja -j4 && ninja install && \
     cd ../.. && rm -rf msgpack-c
 
-# 524f0dc5aef67ac973a453ba8d5f7ce3d2291c20 is the final version compatible with Python2
+# 1bea6c5fc81eb12b8479236e44d78b597db2d29e is the final version compatible with Python2 due to pybind11/typing.h introduction
+# older debian requires f0cb72c24e162d387682e06add312b844b67c945 (without plugindatabase refactor) due to boost::filesystem incompatibility
 # bulletrave has been given up
 RUN git clone https://github.com/rdiankov/openrave.git && mkdir openrave/build && \
     cd openrave/build && \
@@ -114,7 +121,7 @@ RUN git clone https://github.com/rdiankov/openrave.git && mkdir openrave/build &
       FLAG_CMAKE_CXX_STANDARD="-DCMAKE_CXX_STANDARD=14"; \
       git checkout f0cb72c24e162d387682e06add312b844b67c945; \
     else \
-      git checkout 524f0dc5aef67ac973a453ba8d5f7ce3d2291c20; \
+      git checkout 1bea6c5fc81eb12b8479236e44d78b597db2d29e; \
     fi && \
     if grep '^Ubuntu 22' /etc/issue >/dev/null || grep '^Debian GNU/Linux 12' /etc/issue >/dev/null; then \
       FLAG_CMAKE_CXX_STANDARD="-DCMAKE_CXX_STANDARD=17"; \
