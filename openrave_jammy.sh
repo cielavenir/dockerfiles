@@ -1,1 +1,1 @@
-docker build -t index.docker.io/cielavenir/openrave:jammy --build-arg BASE=ubuntu:jammy openrave
+docker build -t index.docker.io/cielavenir/openrave:jammy --build-arg BASE=ubuntu:jammy openrave_python3
