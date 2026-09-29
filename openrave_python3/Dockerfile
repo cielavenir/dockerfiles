@@ -104,7 +104,7 @@ RUN git clone https://github.com/rdiankov/openrave.git && mkdir openrave/build &
     cd openrave/build && \
     git config --local user.email 'dockerfile@vagrant.example.com' && \
     git config --local user.name 'dockerfile' && \
-    git checkout fe8f3e7aa40876d2fb200abbecaee7372ed79098 && \
+    git checkout 1546f0e2ec29fdb9aba30a8bad90be2dab2c8abc && \
     FLAG_CMAKE_CXX_STANDARD="" && \
     if grep '^Ubuntu J' /etc/issue >/dev/null || grep '^Ubuntu 22' /etc/issue >/dev/null || grep '^Debian GNU/Linux 12' /etc/issue >/dev/null || grep '^Debian GNU/Linux bookworm' /etc/issue >/dev/null; then \
       FLAG_CMAKE_CXX_STANDARD="-DCMAKE_CXX_STANDARD=17"; \
