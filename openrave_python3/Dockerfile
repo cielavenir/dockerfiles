@@ -115,7 +115,7 @@ RUN git clone https://github.com/rdiankov/openrave.git && mkdir openrave/build &
     cd ../.. && rm -rf openrave
 
 # https://bugs.launchpad.net/ubuntu/+source/python3-stdlib-extensions/+bug/1832215
-RUN for ver in 3.8 3.9 3.10 3.11 3.12 3.13; do \
+RUN for ver in 3.8 3.9 3.10 3.11 3.12 3.13 3.14 3.15; do \
       if [ -d /usr/local/lib/python${ver} ] && [ ! -d /usr/local/lib/python${ver}/dist-packages/openravepy ]; then \
         ln -s /usr/local/lib/python3/dist-packages/openravepy /usr/local/lib/python${ver}/dist-packages/openravepy; \
         ln -s /usr/local/lib/python3/dist-packages/sympy /usr/local/lib/python${ver}/dist-packages/sympy; \
