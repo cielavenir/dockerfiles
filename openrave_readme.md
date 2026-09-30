@@ -1,6 +1,6 @@
 ## openrave
 
-With ones with viewer support, you can invoke
+If the container's OpenGL is supported by the host, you can invoke
 
 ```
 docker run -it --rm --env DISPLAY --device /dev/dri --volume /tmp/.X11-unix:/tmp/.X11-unix docker.io/cielavenir/openrave:focal openrave.py -i
@@ -8,7 +8,7 @@ docker run -it --rm --env DISPLAY --device /dev/dri --volume /tmp/.X11-unix:/tmp
 
 ### Features
 
-|Debian/Ubuntu|Codename|Python|Viewer|
+|Debian/Ubuntu|Codename|Python|Viewer on Debian 13|
 |:--|:--|:--|:--|
 |Debian 9|stretch|2|x|
 |Ubuntu 18|bionic|2|x|
