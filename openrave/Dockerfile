@@ -160,6 +160,10 @@ ENV OPENRAVE_PLUGINS=
 
 RUN if grep '^Ubuntu 16' /etc/issue >/dev/null || grep '^Ubuntu 18' /etc/issue >/dev/null || grep '^Debian GNU/Linux 9' /etc/issue >/dev/null || grep '^Debian GNU/Linux 10' /etc/issue >/dev/null; then \
       true; \
+    elif grep '^Ubuntu 22' /etc/issue >/dev/null; then \
+      curl -O http://archive.debian.org/debian/pool/main/w/what-is-python/python-is-python2_2.7.18-9_all.deb && \
+      apt-get install -y ./python-is-python2_2.7.18-9_all.deb && \
+      rm -f python-is-python2_2.7.18-9_all.deb; \
     else \
       apt-get update -y && apt-get install -y python-is-python2; \
     fi
